@@ -82,8 +82,14 @@ export class AuthService {
     this._isLoading.set(true);
     this._error.set(null);
 
+    const credentials = `${loginRequest.username}:${loginRequest.password}`;
+    const encodedCredentials = btoa(credentials);
+    const headers = {
+      Authorization: `Basic ${encodedCredentials}`,
+    };
+
     return this.http
-      .post<LoginResponse>(`${this.API_URL}/login`, loginRequest)
+      .post<LoginResponse>(`${this.API_URL}/login`, {}, { headers })
       .pipe(
         tap((response) => {
           if (response.success && response.user) {
@@ -105,8 +111,24 @@ export class AuthService {
     this._isLoading.set(true);
     this._error.set(null);
 
+    // Create Basic Auth header for password: "Basic base64(username:password)"
+    const credentials = `${signupRequest.username}:${signupRequest.password}`;
+    const encodedCredentials = btoa(credentials);
+    const headers = {
+      Authorization: `Basic ${encodedCredentials}`,
+    };
+
+    // Send other signup data in body (without password)
+    const signupData = {
+      firstName: signupRequest.firstName,
+      lastName: signupRequest.lastName,
+      email: signupRequest.email,
+      birthDate: signupRequest.birthDate,
+      gender: signupRequest.gender,
+    };
+
     return this.http
-      .post<LoginResponse>(`${this.API_URL}/signup`, signupRequest)
+      .post<LoginResponse>(`${this.API_URL}/signup`, signupData, { headers })
       .pipe(
         tap((response) => {
           if (response.success && response.user) {
