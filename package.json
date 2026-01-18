@@ -8,6 +8,9 @@
         "stop": "docker compose -f docker-compose.dev.yml down",
         "logs": "docker compose -f docker-compose.dev.yml logs -f",
         "start:api": "npm --prefix ./api run start:dev",
-        "start:client": "npm --prefix ./client run start"
+        "start:client": "npm --prefix ./client run start",
+        "format": "npm run format --workspaces",
+        "format:check": "npm run format:check --workspaces",
+        "lint": "npm run lint --workspaces"
     }
 }
