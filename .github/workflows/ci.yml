@@ -243,14 +243,14 @@ jobs:
 
       - name: Run E2E tests
         working-directory: e2e
-        run: npx playwright test --config ../client/playwright.config.ts
+        run: npx playwright test --config ../e2e/playwright.config.ts
 
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: client-playwright-report
-          path: client/playwright-report/
+          name: playwright-report
+          path: playwright-report/
 
       - name: Stop API and Client
         if: always()
