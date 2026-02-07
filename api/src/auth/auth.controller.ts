@@ -1,7 +1,6 @@
 import {
   Controller,
   Post,
-  Body,
   HttpCode,
   HttpStatus,
   Headers,
@@ -23,7 +22,7 @@ export class AuthController {
       );
     }
 
-    const base64Credentials = authHeader.substring(6); // Remove "Basic "
+    const base64Credentials = authHeader.substring(6);
     const credentials = Buffer.from(base64Credentials, 'base64').toString(
       'utf-8',
     );

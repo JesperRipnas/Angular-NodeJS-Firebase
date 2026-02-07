@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { AuthUser } from './interfaces/auth-user.interface';
+import { Role } from './enums/role.enum';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -33,11 +34,15 @@ describe('AuthController', () => {
       firstName: 'Admin',
       lastName: 'User',
       birthDate: '1990-01-01',
+      role: Role.ADMIN,
     };
 
     authService.validateUser.mockReturnValue(user);
 
-    const result = controller.login(dto);
+    const authHeader =
+      'Basic ' +
+      Buffer.from(`${dto.username}:${dto.password}`).toString('base64');
+    const result = controller.login(authHeader);
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(authService.validateUser).toHaveBeenCalledWith(dto);
@@ -50,7 +55,11 @@ describe('AuthController', () => {
       throw new UnauthorizedException('Invalid credentials');
     });
 
-    expect(() => controller.login(dto)).toThrow(UnauthorizedException);
+    const authHeader =
+      'Basic ' +
+      Buffer.from(`${dto.username}:${dto.password}`).toString('base64');
+
+    expect(() => controller.login(authHeader)).toThrow(UnauthorizedException);
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(authService.validateUser).toHaveBeenCalledWith(dto);
   });
