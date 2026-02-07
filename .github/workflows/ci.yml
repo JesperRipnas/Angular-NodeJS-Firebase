@@ -239,10 +239,14 @@ jobs:
           DATABASE_USER: ${{ vars.DATABASE_USER }}
           DATABASE_PASSWORD: ${{ vars.DATABASE_PASSWORD }}
           DATABASE_NAME: ${{ vars.DATABASE_NAME }}
-        run: npm --prefix api run start &
+        run: |
+          npm --prefix api run start &
+          echo $! > api.pid
 
       - name: Start Client
-        run: npm --prefix client run start &
+        run: |
+          npm --prefix client run start &
+          echo $! > client.pid
 
       - name: Wait for services
         run: npx wait-on -t 60000 tcp:localhost:3000 http://localhost:4200
@@ -257,3 +261,9 @@ jobs:
         with:
           name: client-playwright-report
           path: client/playwright-report/
+
+      - name: Stop API and Client
+        if: always()
+        run: |
+          if [ -f api.pid ]; then kill $(cat api.pid) || true; fi
+          if [ -f client.pid ]; then kill $(cat client.pid) || true; fi
