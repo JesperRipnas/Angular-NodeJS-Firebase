@@ -10,7 +10,6 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:4200',
     headless: true,
-    video: 'retain-on-failure',
   },
   projects: [
     {

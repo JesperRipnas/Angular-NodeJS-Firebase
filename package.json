@@ -1,16 +1,19 @@
 {
-    "name": "project",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
-        "start": "docker compose -f docker-compose.dev.yml up --build",
-        "start:detached": "docker compose -f docker-compose.dev.yml up --build -d",
-        "stop": "docker compose -f docker-compose.dev.yml down",
-        "logs": "docker compose -f docker-compose.dev.yml logs -f",
-        "start:api": "npm --prefix ./api run start:dev",
-        "start:client": "npm --prefix ./client run start",
-        "format": "npm run format --workspaces",
-        "format:check": "npm run format:check --workspaces",
-        "lint": "npm run lint --workspaces"
-    }
+  "name": "project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "docker compose -f docker-compose.dev.yml up --build",
+    "start:detached": "docker compose -f docker-compose.dev.yml up --build -d",
+    "stop": "docker compose -f docker-compose.dev.yml down",
+    "logs": "docker compose -f docker-compose.dev.yml logs -f",
+    "start:api": "npm --prefix ./api run start:dev",
+    "start:client": "npm --prefix ./client run start",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report",
+    "format": "npm run format --workspaces",
+    "format:check": "npm run format:check --workspaces",
+    "lint": "npm run lint --workspaces"
+  }
 }

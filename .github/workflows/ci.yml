@@ -203,6 +203,7 @@ jobs:
           cache-dependency-path: |
             api/package-lock.json
             client/package-lock.json
+            e2e/package-lock.json
 
       - name: Install API dependencies
         working-directory: api
@@ -212,8 +213,12 @@ jobs:
         working-directory: client
         run: npm ci
 
+      - name: Install E2E dependencies
+        working-directory: e2e
+        run: npm install
+
       - name: Install Playwright browsers
-        working-directory: client
+        working-directory: e2e
         run: npx playwright install --with-deps chromium
 
       - name: Start API
@@ -237,8 +242,8 @@ jobs:
         run: npx wait-on -t 60000 tcp:localhost:3000 http://localhost:4200
 
       - name: Run E2E tests
-        working-directory: client
-        run: npm run test:e2e
+        working-directory: e2e
+        run: npx playwright test --config ../client/playwright.config.ts
 
       - name: Upload Playwright report
         if: always()

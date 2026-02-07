@@ -1,30 +1,6 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-interface Credentials {
-  username: string;
-  password: string;
-}
-
-const users = {
-  admin: { username: 'admin', password: '1234' },
-  user: { username: 'user', password: '1234' },
-  seller: { username: 'seller', password: '1234' },
-} satisfies Record<string, Credentials>;
-
-const grantCookieConsent = async (page: Page): Promise<void> => {
-  await page.addInitScript(() => {
-    localStorage.setItem('cookie_consent', 'true');
-  });
-};
-
-const login = async (page: Page, credentials: Credentials): Promise<void> => {
-  await page.goto('/');
-  await page.locator('button.login-button').click();
-  await page.locator('#email').fill(credentials.username);
-  await page.locator('#password').fill(credentials.password);
-  await page.locator('button.submit-btn').click();
-  await expect(page).toHaveURL(/\/dashboard$/);
-};
+import { grantCookieConsent, login, users } from '../support/auth';
 
 test('unauthenticated user cannot access protected routes', async ({
   page,
