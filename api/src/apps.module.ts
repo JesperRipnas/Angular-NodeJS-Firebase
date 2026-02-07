@@ -18,7 +18,7 @@ import { CommonModule } from './common/common.module';
       validationSchema: Joi.object({
         ENABLE_HTTP_LOGS: Joi.boolean().required(),
         DATABASE_HOST: Joi.string().hostname().required(),
-        DATBASE_PORT: Joi.number().default(5432),
+        DATABASE_PORT: Joi.number().default(5432),
         DATABASE_USER: Joi.string().required(),
         DATABASE_PASSWORD: Joi.string().required(),
         DATABASE_NAME: Joi.string().required(),
