@@ -23,13 +23,13 @@ describe('UsersService', () => {
   });
 
   it('should get a user by username', () => {
-    const user = service.getUserByUsername('admin');
+    const user = service.getUserById('0f2b4a2e-3b9a-4e0a-a98d-8f4f5d2f9a01');
     expect(user).toBeDefined();
     expect(user?.username).toBe('admin');
   });
 
   it('should return undefined for non-existent user', () => {
-    const user = service.getUserByUsername('nonexistent');
+    const user = service.getUserById('nonexistent');
     expect(user).toBeUndefined();
   });
 });

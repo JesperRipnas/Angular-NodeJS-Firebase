@@ -35,6 +35,8 @@ describe('AuthController', () => {
       lastName: 'User',
       birthDate: '1990-01-01',
       role: Role.ADMIN,
+      verifiedEmail: true,
+      uuid: '0f2b4a2e-3b9a-4e0a-a98d-8f4f5d2f9a01',
     };
 
     authService.validateUser.mockReturnValue(user);
