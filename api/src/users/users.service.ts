@@ -13,6 +13,7 @@ export class UsersService {
       lastName: 'User',
       birthDate: '1990-01-01',
       role: Role.ADMIN,
+      verifiedEmail: true,
     },
     {
       username: 'john_doe',
@@ -21,6 +22,7 @@ export class UsersService {
       lastName: 'Doe',
       birthDate: '1992-05-15',
       role: Role.USER,
+      verifiedEmail: false,
     },
     {
       username: 'seller_jane',
@@ -29,6 +31,7 @@ export class UsersService {
       lastName: 'Smith',
       birthDate: '1988-11-22',
       role: Role.SELLER,
+      verifiedEmail: false,
     },
   ];
 

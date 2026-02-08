@@ -8,6 +8,10 @@ export interface Translation {
     signup: string;
     yes: string;
     no: string;
+    pagination: {
+      previous: string;
+      next: string;
+    };
   };
   header: {
     switchToSwedish: string;

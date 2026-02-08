@@ -10,6 +10,10 @@ export const sv: Translation = {
     signup: 'Registrera',
     yes: 'Ja',
     no: 'Nej',
+    pagination: {
+      previous: 'Föregående',
+      next: 'Nästa',
+    },
   },
   header: {
     switchToSwedish: 'Byt till svenska',

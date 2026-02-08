@@ -21,6 +21,7 @@ export class AuthService {
         firstName: 'Admin',
         lastName: 'User',
         birthDate: '1990-01-01',
+        verifiedEmail: true,
         role: Role.ADMIN,
       },
       {
@@ -30,6 +31,7 @@ export class AuthService {
         firstName: 'Regular',
         lastName: 'User',
         birthDate: '1995-06-15',
+        verifiedEmail: true,
         role: Role.USER,
       },
       {
@@ -39,6 +41,7 @@ export class AuthService {
         firstName: 'Store',
         lastName: 'Seller',
         birthDate: '1988-11-20',
+        verifiedEmail: false,
         role: Role.SELLER,
       },
     ];

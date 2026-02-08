@@ -7,7 +7,17 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class UsersService {
   private readonly http = inject(HttpClient);
-  private readonly API_URL = `${environment.apiUrl}/users`;
+  private readonly API_URL = `${this.resolveApiUrl()}/users`;
+
+  private resolveApiUrl(): string {
+    const base = environment.apiUrl?.trim();
+    if (!environment.production && typeof window !== 'undefined') {
+      if (!base || base === window.location.origin) {
+        return 'http://localhost:3000';
+      }
+    }
+    return base || 'http://localhost:3000';
+  }
 
   getUsers(): Observable<AuthUser[]> {
     return this.http.get<AuthUser[]>(this.API_URL);

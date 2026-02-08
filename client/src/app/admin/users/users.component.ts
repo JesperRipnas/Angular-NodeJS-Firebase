@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   signal,
   OnInit,
@@ -12,11 +13,12 @@ import { AuthUser } from '../../auth/models/auth-user.model';
 import { EditUserModalComponent } from './edit-user-modal/edit-user-modal.component';
 import { Role } from '../../auth/models/role.enum';
 import { TranslationService } from '../../shared/services/translation.service';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, EditUserModalComponent],
+  imports: [CommonModule, EditUserModalComponent, PaginatorComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
@@ -37,6 +39,8 @@ export class UsersComponent implements OnInit {
     'verified',
     'unverified',
   ]);
+  pageIndex = signal(1);
+  pageSize = signal(10);
 
   readonly roleOptions = [
     { value: Role.ADMIN, labelKey: 'admin.users.roles.admin' },
@@ -69,8 +73,8 @@ export class UsersComponent implements OnInit {
     }
 
     return this.users().filter((user) => {
-      const username = user.username.toLowerCase();
-      const email = user.email.toLowerCase();
+      const username = user.username?.toLowerCase() ?? '';
+      const email = user.email?.toLowerCase() ?? '';
       const matchesQuery = username.includes(query) || email.includes(query);
       const matchesRole =
         selectedRoles.length === 0 || selectedRoles.includes(user.role);
@@ -83,9 +87,24 @@ export class UsersComponent implements OnInit {
     });
   });
 
+  readonly pagedUsers = computed(() => {
+    const start = (this.pageIndex() - 1) * this.pageSize();
+    return this.filteredUsers().slice(start, start + this.pageSize());
+  });
+
   readonly isAllRolesSelected = computed(
     () => this.selectedRoles().length === 0
   );
+
+  private readonly paginationGuard = effect(() => {
+    const totalPages = Math.max(
+      1,
+      Math.ceil(this.filteredUsers().length / this.pageSize())
+    );
+    if (this.pageIndex() > totalPages) {
+      this.pageIndex.set(totalPages);
+    }
+  });
 
   ngOnInit(): void {
     this.loadUsers();
@@ -121,15 +140,18 @@ export class UsersComponent implements OnInit {
   onSearchInput(event: Event): void {
     const target = event.target as HTMLInputElement | null;
     this.searchTerm.set(target?.value ?? '');
+    this.pageIndex.set(1);
   }
 
   toggleAllRoles(checked: boolean): void {
     if (checked) {
       this.selectedRoles.set([]);
+      this.pageIndex.set(1);
       return;
     }
 
     this.selectedRoles.set(this.roleOptions.map((option) => option.value));
+    this.pageIndex.set(1);
   }
 
   toggleRole(role: Role, checked: boolean): void {
@@ -140,6 +162,7 @@ export class UsersComponent implements OnInit {
 
       return roles.filter((value) => value !== role);
     });
+    this.pageIndex.set(1);
   }
 
   isRoleSelected(role: Role): boolean {
@@ -158,10 +181,15 @@ export class UsersComponent implements OnInit {
 
       return current.filter((item) => item !== value);
     });
+    this.pageIndex.set(1);
   }
 
   isVerificationSelected(value: 'verified' | 'unverified'): boolean {
     return this.selectedVerification().includes(value);
+  }
+
+  onPageChange(page: number): void {
+    this.pageIndex.set(page);
   }
 
   isLastAdmin(user: AuthUser): boolean {

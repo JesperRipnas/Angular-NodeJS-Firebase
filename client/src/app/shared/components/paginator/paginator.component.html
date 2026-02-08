@@ -1,0 +1,34 @@
+<nav class="paginator" [attr.aria-label]="ariaLabel()">
+  <button
+    class="page-btn"
+    type="button"
+    [disabled]="!canGoPrevious()"
+    (click)="goPrevious()"
+  >
+    {{ previousLabel() }}
+  </button>
+
+  <div class="page-list" role="list">
+    @for (page of pages(); track page) {
+      <button
+        class="page-btn page-number"
+        type="button"
+        (click)="goToPage(page)"
+        [class.is-active]="page === pageIndex()"
+        [attr.aria-current]="page === pageIndex() ? 'page' : null"
+        role="listitem"
+      >
+        {{ page }}
+      </button>
+    }
+  </div>
+
+  <button
+    class="page-btn"
+    type="button"
+    [disabled]="!canGoNext()"
+    (click)="goNext()"
+  >
+    {{ nextLabel() }}
+  </button>
+</nav>

@@ -6,5 +6,6 @@ export interface AuthUser {
   firstName: string;
   lastName: string;
   birthDate: string;
+  verifiedEmail: boolean;
   role: Role;
 }

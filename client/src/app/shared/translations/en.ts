@@ -10,6 +10,10 @@ export const en: Translation = {
     signup: 'Sign up',
     yes: 'Yes',
     no: 'No',
+    pagination: {
+      previous: 'Previous',
+      next: 'Next',
+    },
   },
   header: {
     switchToSwedish: 'Switch to Swedish',
