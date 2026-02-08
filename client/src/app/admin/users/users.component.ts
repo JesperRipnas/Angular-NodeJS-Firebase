@@ -203,7 +203,7 @@ export class UsersComponent implements OnInit {
     this.isSaving.set(true);
     this.error.set(null);
 
-    this.usersService.updateUser(originalUser.username, updatedUser).subscribe({
+    this.usersService.updateUser(originalUser.uuid, updatedUser).subscribe({
       next: () => {
         this.isSaving.set(false);
         this.closeEditModal();
@@ -219,8 +219,8 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  deleteUser(username: string): void {
-    const userToDelete = this.users().find((u) => u.username === username);
+  deleteUser(uuid: string): void {
+    const userToDelete = this.users().find((u) => u.uuid === uuid);
     if (!userToDelete) return;
 
     if (this.isLastAdmin(userToDelete)) {
@@ -235,7 +235,7 @@ export class UsersComponent implements OnInit {
     if (
       confirm(this.translation.translate('admin.users.messages.confirmDelete'))
     ) {
-      this.usersService.deleteUser(username).subscribe({
+      this.usersService.deleteUser(uuid).subscribe({
         next: () => {
           this.loadUsers();
         },

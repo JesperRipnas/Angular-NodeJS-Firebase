@@ -24,43 +24,43 @@ export class UsersController {
   }
 
   // NEEDS TO CHECK FOR AUTHORIZATION BOTH IN CLIENT & SERVER
-  @Get(':username')
+  @Get(':uuid')
   @HttpCode(HttpStatus.OK)
-  getUser(@Param('username') username: string): AuthUser {
-    const user = this.usersService.getUserByUsername(username);
+  getUser(@Param('uuid') uuid: string): AuthUser {
+    const user = this.usersService.getUserById(uuid);
     if (!user) {
-      throw new NotFoundException(`User with username "${username}" not found`);
+      throw new NotFoundException(`User with id "${uuid}" not found`);
     }
     return user;
   }
 
-  @Put(':username')
+  @Put(':uuid')
   @HttpCode(HttpStatus.OK)
   updateUser(
-    @Param('username') username: string,
+    @Param('uuid') uuid: string,
     @Body() updateData: Partial<AuthUser>,
   ): AuthUser {
-    if (!username) {
-      throw new BadRequestException('Username is required');
+    if (!uuid) {
+      throw new BadRequestException('User id is required');
     }
 
-    const updatedUser = this.usersService.updateUser(username, updateData);
+    const updatedUser = this.usersService.updateUser(uuid, updateData);
     if (!updatedUser) {
-      throw new NotFoundException(`User with username "${username}" not found`);
+      throw new NotFoundException(`User with id "${uuid}" not found`);
     }
     return updatedUser;
   }
 
-  @Delete(':username')
+  @Delete(':uuid')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteUser(@Param('username') username: string): void {
-    if (!username) {
-      throw new BadRequestException('Username is required');
+  deleteUser(@Param('uuid') uuid: string): void {
+    if (!uuid) {
+      throw new BadRequestException('User id is required');
     }
 
-    const deleted = this.usersService.deleteUser(username);
+    const deleted = this.usersService.deleteUser(uuid);
     if (!deleted) {
-      throw new NotFoundException(`User with username "${username}" not found`);
+      throw new NotFoundException(`User with id "${uuid}" not found`);
     }
   }
 }

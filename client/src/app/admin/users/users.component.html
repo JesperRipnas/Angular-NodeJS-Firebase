@@ -140,7 +140,7 @@
           </thead>
           <tbody>
             @if (pagedUsers().length > 0) {
-              @for (user of pagedUsers(); track user.username) {
+              @for (user of pagedUsers(); track user.uuid) {
                 <tr>
                   <td>{{ user.username }}</td>
                   <td>{{ user.email }}</td>
@@ -169,7 +169,7 @@
                       </button>
                       <button
                         class="btn btn-delete"
-                        (click)="deleteUser(user.username)"
+                        (click)="deleteUser(user.uuid)"
                         [disabled]="isSaving() || isLastAdmin(user)"
                         [title]="
                           isLastAdmin(user)
