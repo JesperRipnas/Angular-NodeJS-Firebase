@@ -40,7 +40,8 @@ export class UsersComponent implements OnInit {
     'unverified',
   ]);
   pageIndex = signal(1);
-  pageSize = signal(10);
+  pageSize = signal(5);
+  readonly pageSizeOptions = [10, 15, 20];
 
   readonly roleOptions = [
     { value: Role.ADMIN, labelKey: 'admin.users.roles.admin' },
@@ -190,6 +191,11 @@ export class UsersComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.pageIndex.set(page);
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.pageIndex.set(1);
   }
 
   isLastAdmin(user: AuthUser): boolean {

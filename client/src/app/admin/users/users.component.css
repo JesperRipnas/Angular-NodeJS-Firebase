@@ -1,6 +1,6 @@
 .users-container {
   padding: 2rem;
-  max-width: 1280px;
+  max-width: 90%;
   margin: 0 auto;
   color: #111827;
   background: transparent;
@@ -71,7 +71,7 @@
   background: transparent;
   border: none;
   border-radius: 0.75rem;
-  padding: 0 0 1.5rem;
+  padding: 0 0 1rem;
   box-shadow: none;
   margin-bottom: 0;
 }
@@ -83,11 +83,16 @@
 }
 
 .users-panel {
+  --users-header-height: 52px;
+  --users-row-height: 56px;
+  min-height: calc(var(--users-header-height) + (var(--users-row-height) * 7));
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 1.25rem;
   padding: 1.5rem;
   box-shadow: 0 18px 30px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
 }
 
 :host-context(.dark) .users-panel {
@@ -100,7 +105,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .search-controls {
@@ -295,11 +300,22 @@
 }
 
 .users-table {
-  overflow-x: auto;
+  --users-header-height: 52px;
+  --users-row-height: 56px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
   border-radius: 0.9rem;
   border: 1px solid #e5e7eb;
   background: #ffffff;
   box-shadow: none;
+  min-height: calc(var(--users-header-height) + (var(--users-row-height) * 7));
+  flex: 1;
+}
+
+.users-table::after {
+  content: '';
+  flex: 1;
 }
 
 :host-context(.dark) .users-table {
@@ -312,6 +328,35 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: transparent;
+  table-layout: fixed;
+}
+
+.col-username {
+  width: 10%;
+}
+
+.col-email {
+  width: 14%;
+}
+
+.col-first-name {
+  width: 8%;
+}
+
+.col-last-name {
+  width: 8%;
+}
+
+.col-verified {
+  width: 8%;
+}
+
+.col-role {
+  width: 12%;
+}
+
+.col-actions {
+  width: 12%;
 }
 
 :host-context(.dark) table {

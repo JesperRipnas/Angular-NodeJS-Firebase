@@ -119,6 +119,15 @@
     } @else {
       <div class="users-table">
         <table>
+          <colgroup>
+            <col class="col-username" />
+            <col class="col-email" />
+            <col class="col-first-name" />
+            <col class="col-last-name" />
+            <col class="col-verified" />
+            <col class="col-role" />
+            <col class="col-actions" />
+          </colgroup>
           <thead>
             <tr>
               <th>
@@ -202,9 +211,15 @@
           [totalItems]="filteredUsers().length"
           [pageSize]="pageSize()"
           [pageIndex]="pageIndex()"
+          [pageSizeOptions]="pageSizeOptions"
+          [pageSizeLabel]="translation.translate('shared.pagination.pageSize')"
+          [pageSizeAriaLabel]="
+            translation.translate('shared.pagination.pageSizeAria')
+          "
           [previousLabel]="translation.translate('shared.pagination.previous')"
           [nextLabel]="translation.translate('shared.pagination.next')"
           (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
         ></app-paginator>
       </div>
     }

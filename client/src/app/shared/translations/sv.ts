@@ -13,6 +13,8 @@ export const sv: Translation = {
     pagination: {
       previous: 'Föregående',
       next: 'Nästa',
+      pageSize: 'Användare per sida',
+      pageSizeAria: 'Välj användare per sida',
     },
   },
   header: {
@@ -71,7 +73,7 @@ export const sv: Translation = {
     username: 'Användarnamn',
     email: 'E-post',
     birthDate: 'Födelsedatum',
-    verifiedEmail: 'Verifierad e-post',
+    verifiedEmail: 'Verifierad',
   },
   sidebar: {
     dashboard: 'Instrumentpanel',
@@ -115,7 +117,7 @@ export const sv: Translation = {
         username: 'Användarnamn',
         email: 'E-post',
         name: 'Namn',
-        verifiedEmail: 'Verifierad e-post',
+        verifiedEmail: 'Verifierad',
         role: 'Roll',
         actions: 'Åtgärder',
       },

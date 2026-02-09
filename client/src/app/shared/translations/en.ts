@@ -13,6 +13,8 @@ export const en: Translation = {
     pagination: {
       previous: 'Previous',
       next: 'Next',
+      pageSize: 'Users per page',
+      pageSizeAria: 'Select users per page',
     },
   },
   header: {
@@ -71,7 +73,7 @@ export const en: Translation = {
     username: 'Username',
     email: 'Email',
     birthDate: 'Birth Date',
-    verifiedEmail: 'Verified Email',
+    verifiedEmail: 'Verified',
   },
   sidebar: {
     dashboard: 'Dashboard',
@@ -115,7 +117,7 @@ export const en: Translation = {
         username: 'Username',
         email: 'Email',
         name: 'Name',
-        verifiedEmail: 'Verified email',
+        verifiedEmail: 'Verified',
         role: 'Role',
         actions: 'Actions',
       },

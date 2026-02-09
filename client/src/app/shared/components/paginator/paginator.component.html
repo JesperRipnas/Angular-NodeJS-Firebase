@@ -31,4 +31,18 @@
   >
     {{ nextLabel() }}
   </button>
+
+  <div class="page-size">
+    <span class="page-size-label">{{ pageSizeLabel() }}</span>
+    <select
+      class="page-size-select"
+      [value]="pageSize()"
+      (change)="onPageSizeChange($any($event.target).value)"
+      [attr.aria-label]="pageSizeAriaLabel()"
+    >
+      @for (option of pageSizeOptions(); track option) {
+        <option [value]="option">{{ option }}</option>
+      }
+    </select>
+  </div>
 </nav>

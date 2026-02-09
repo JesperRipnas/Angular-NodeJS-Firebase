@@ -3,7 +3,28 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 1rem 0 0;
+  padding: 1rem 0 1rem;
+  flex-wrap: wrap;
+}
+
+.page-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.page-size-label {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.page-size-select {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 0.85rem;
 }
 
 .page-list {
@@ -48,6 +69,16 @@
 }
 
 :host-context(.dark) .page-btn {
+  background: #0b1220;
+  border-color: #1f2937;
+  color: #e2e8f0;
+}
+
+:host-context(.dark) .page-size-label {
+  color: #9ca3af;
+}
+
+:host-context(.dark) .page-size-select {
   background: #0b1220;
   border-color: #1f2937;
   color: #e2e8f0;

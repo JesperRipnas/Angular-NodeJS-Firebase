@@ -11,6 +11,8 @@ export interface Translation {
     pagination: {
       previous: string;
       next: string;
+      pageSize: string;
+      pageSizeAria: string;
     };
   };
   header: {
