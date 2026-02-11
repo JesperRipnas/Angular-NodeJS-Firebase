@@ -56,7 +56,7 @@ export const authConfig: BetterAuthOptions = {
   secret:
     process.env.BETTER_AUTH_SECRET ?? 'dev_better_auth_secret_32_chars_min',
   baseURL: process.env.BETTER_AUTH_URL ?? 'http://localhost:3000',
-  trustedOrigins: ['http://localhost:4200', '*'],
+  trustedOrigins: ['http://localhost:4200'],
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 4,
