@@ -413,7 +413,7 @@
           <tbody>
             @if (pagedUsers().length > 0) {
               @for (user of pagedUsers(); track user.uuid) {
-                <tr>
+                <tr [class.editing-row]="editingRow() === user.uuid">
                   <td class="date-cell">{{ formatDate(user.createdAt) }}</td>
                   <td class="date-cell">
                     {{
@@ -430,64 +430,195 @@
                     }}
                   </td>
                   <td>
-                    <span class="role-badge" [class]="'role-' + user.role">
-                      {{ user.role }}
-                    </span>
+                    @if (editingRow() === user.uuid) {
+                      <select
+                        (change)="
+                          setEditedValue('role', $any($event.target).value)
+                        "
+                        (keydown)="handleInlineKey($event, user)"
+                        (keydown.escape)="handleInlineKey($event, user)"
+                        (keyup.enter)="handleInlineKey($event, user)"
+                      >
+                        @for (opt of roleOptions; track opt.value) {
+                          <option
+                            [value]="opt.value"
+                            [selected]="opt.value === editedRow().role"
+                          >
+                            {{ translation.translate(opt.labelKey) }}
+                          </option>
+                        }
+                      </select>
+                    } @else {
+                      <span class="role-badge" [class]="'role-' + user.role">
+                        {{ user.role }}
+                      </span>
+                    }
                   </td>
-                  <td>{{ formatUsername(user.username) }}</td>
-                  <td>{{ user.firstName }}</td>
-                  <td>{{ user.lastName }}</td>
-                  <td>{{ user.email }}</td>
+                  <td>
+                    @if (editingRow() === user.uuid) {
+                      <input
+                        type="text"
+                        class="inline-input"
+                        [value]="editedRow().username"
+                        [class.invalid]="!isEditedFieldValid('username', user)"
+                        (input)="
+                          setEditedValue('username', $any($event.target).value)
+                        "
+                        (keydown)="handleInlineKey($event, user)"
+                        (keydown.escape)="handleInlineKey($event, user)"
+                        (keyup.enter)="handleInlineKey($event, user)"
+                      />
+                    } @else {
+                      {{ formatUsername(user.username) }}
+                    }
+                  </td>
+                  <td>
+                    @if (editingRow() === user.uuid) {
+                      <input
+                        type="text"
+                        class="inline-input"
+                        [value]="editedRow().firstName"
+                        [class.invalid]="!isEditedFieldValid('firstName', user)"
+                        (input)="
+                          setEditedValue('firstName', $any($event.target).value)
+                        "
+                        (keydown)="handleInlineKey($event, user)"
+                        (keydown.escape)="handleInlineKey($event, user)"
+                        (keyup.enter)="handleInlineKey($event, user)"
+                      />
+                    } @else {
+                      {{ user.firstName }}
+                    }
+                  </td>
+                  <td>
+                    @if (editingRow() === user.uuid) {
+                      <input
+                        type="text"
+                        class="inline-input"
+                        [value]="editedRow().lastName"
+                        [class.invalid]="!isEditedFieldValid('lastName', user)"
+                        (input)="
+                          setEditedValue('lastName', $any($event.target).value)
+                        "
+                        (keydown)="handleInlineKey($event, user)"
+                        (keydown.escape)="handleInlineKey($event, user)"
+                        (keyup.enter)="handleInlineKey($event, user)"
+                      />
+                    } @else {
+                      {{ user.lastName }}
+                    }
+                  </td>
+                  <td>
+                    @if (editingRow() === user.uuid) {
+                      <input
+                        type="email"
+                        class="inline-input"
+                        [value]="editedRow().email"
+                        [class.invalid]="!isEditedFieldValid('email', user)"
+                        (input)="
+                          setEditedValue('email', $any($event.target).value)
+                        "
+                        (keydown)="handleInlineKey($event, user)"
+                        (keydown.escape)="handleInlineKey($event, user)"
+                        (keyup.enter)="handleInlineKey($event, user)"
+                      />
+                    } @else {
+                      {{ user.email }}
+                    }
+                  </td>
                   <td class="col-center">
                     <div class="actions-cell">
-                      <button
-                        class="icon-button icon-button-edit"
-                        (click)="openEditModal(user)"
-                        [disabled]="isSaving()"
-                        [attr.aria-label]="
-                          translation.translate('admin.users.buttons.edit')
-                        "
-                        [attr.title]="
-                          translation.translate('admin.users.buttons.edit')
-                        "
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                          focusable="false"
+                      @if (editingRow() === user.uuid) {
+                        <button
+                          class="icon-button icon-button-save"
+                          type="button"
+                          (click)="saveInlineEdit(user)"
+                          [disabled]="!canSaveInline(user)"
+                          [attr.aria-label]="
+                            translation.translate('shared.save')
+                          "
+                          [attr.title]="translation.translate('shared.save')"
                         >
-                          <path
-                            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm2.92 2.83H5v-.92l8.06-8.06.92.92L5.92 20.08zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        class="icon-button icon-button-delete"
-                        (click)="deleteUser(user.uuid)"
-                        [disabled]="isSaving() || isLastAdmin(user)"
-                        [attr.aria-label]="
-                          translation.translate('admin.users.buttons.delete')
-                        "
-                        [attr.title]="
-                          isLastAdmin(user)
-                            ? translation.translate(
-                                'admin.users.messages.lastAdminDeleteProtection'
-                              )
-                            : translation.translate(
-                                'admin.users.buttons.delete'
-                              )
-                        "
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                          focusable="false"
+                          <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path
+                              d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          class="icon-button icon-button-cancel"
+                          type="button"
+                          (click)="cancelInlineEdit()"
+                          [disabled]="isSaving()"
+                          [attr.aria-label]="
+                            translation.translate('shared.cancel')
+                          "
+                          [attr.title]="translation.translate('shared.cancel')"
                         >
-                          <path
-                            d="M6 7h12l-1 14H7L6 7zm3-3h6l1 1h4v2H4V5h4l1-1z"
-                          />
-                        </svg>
-                      </button>
+                          <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path
+                              d="M18.3 5.71L12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.29 19.7 2.88 18.29 9.18 12 2.88 5.71 4.29 4.3 10.59 10.6 16.88 4.3z"
+                            />
+                          </svg>
+                        </button>
+                      } @else {
+                        <button
+                          class="icon-button icon-button-edit"
+                          (click)="startInlineEdit(user)"
+                          [disabled]="isSaving()"
+                          [attr.aria-label]="
+                            translation.translate('admin.users.buttons.edit')
+                          "
+                          [attr.title]="
+                            translation.translate('admin.users.buttons.edit')
+                          "
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path
+                              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm2.92 2.83H5v-.92l8.06-8.06.92.92L5.92 20.08zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          class="icon-button icon-button-delete"
+                          (click)="deleteUser(user.uuid)"
+                          [disabled]="isSaving() || isLastAdmin(user)"
+                          [attr.aria-label]="
+                            translation.translate('admin.users.buttons.delete')
+                          "
+                          [attr.title]="
+                            isLastAdmin(user)
+                              ? translation.translate(
+                                  'admin.users.messages.lastAdminDeleteProtection'
+                                )
+                              : translation.translate(
+                                  'admin.users.buttons.delete'
+                                )
+                          "
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path
+                              d="M6 7h12l-1 14H7L6 7zm3-3h6l1 1h4v2H4V5h4l1-1z"
+                            />
+                          </svg>
+                        </button>
+                      }
                     </div>
                   </td>
                 </tr>
@@ -519,13 +650,3 @@
     }
   </div>
 </section>
-
-@if (selectedUserForEdit()) {
-  <app-edit-user-modal
-    [user]="selectedUserForEdit()"
-    [adminCount]="adminCount()"
-    [existingUsers]="users()"
-    (closeModal)="closeEditModal()"
-    (saveUser)="saveEditedUser($event)"
-  ></app-edit-user-modal>
-}

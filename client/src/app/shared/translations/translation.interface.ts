@@ -4,6 +4,8 @@ export interface Translation {
     defaultError: string;
     login: string;
     logout: string;
+    save: string;
+    cancel: string;
     myProfile: string;
     signup: string;
     yes: string;

@@ -6,6 +6,8 @@ export const en: Translation = {
     defaultError: 'An error occurred. Please try again.',
     login: 'Log in',
     logout: 'Log out',
+    save: 'Save',
+    cancel: 'Cancel',
     myProfile: 'My profile',
     signup: 'Sign up',
     yes: 'Yes',

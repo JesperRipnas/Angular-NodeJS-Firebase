@@ -725,6 +725,18 @@ tbody tr:hover {
   background: #2d3748;
 }
 
+/* Highlight the row currently being edited */
+.users-table table tr.editing-row {
+  background: #eef2ff;
+  transition: background-color 0.15s ease;
+  box-shadow: inset 10px 0 0 0 rgba(59, 130, 246, 0.12);
+}
+
+:host-context(.dark) .users-table table tr.editing-row {
+  background: rgba(59, 130, 246, 0.06);
+  box-shadow: inset 10px 0 0 0 rgba(59, 130, 246, 0.22);
+}
+
 .role-badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
@@ -804,6 +816,31 @@ tbody tr:hover {
 .icon-button-delete:hover:not(:disabled) {
   background: #fee2e2;
   color: #dc2626;
+}
+
+.icon-button-save {
+  background: transparent;
+  color: #6b7280;
+}
+
+.icon-button-save svg {
+  fill: currentColor;
+}
+
+.icon-button-save:hover:not(:disabled) {
+  background: #f3f4f6;
+  color: #374151;
+  transform: translateY(0);
+}
+
+.icon-button-cancel {
+  background: transparent;
+  color: #6b7280;
+}
+
+.icon-button-cancel:hover:not(:disabled) {
+  background: #f3f4f6;
+  color: #374151;
 }
 
 :host-context(.dark) .icon-button {
@@ -911,6 +948,89 @@ tbody tr:hover {
   box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
 }
 
+/* Inline edit inputs */
+.inline-input {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.35rem;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.inline-input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12) inset;
+}
+
+.inline-input.invalid {
+  border: 1px solid #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.08) inset;
+}
+
+:host-context(.dark) .inline-input.invalid {
+  border: 1px solid #fca5a5;
+  box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.06) inset;
+}
+
+.users-table select {
+  border: none;
+  background: transparent;
+  padding: 0.35rem 0.45rem;
+  border-radius: 0.35rem;
+}
+
+.users-table select:focus-visible {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12) inset;
+}
+
+select.invalid {
+  border: 1px solid #dc2626;
+}
+
+:host-context(.dark) select.invalid {
+  border: 1px solid #fca5a5;
+}
+
+/* Ensure dropdown options are readable in both light and dark modes */
+.users-table select option {
+  background: #ffffff;
+  color: #111827;
+}
+
+:host-context(.dark) .users-table select {
+  background: #0b1220;
+  color: #f9fafb;
+  border-color: #334155;
+}
+
+:host-context(.dark) .users-table select option {
+  background: #0b1220;
+  color: #f9fafb;
+}
+
+/* Platform-specific tweaks to ensure the dropdown arrow remains visible */
+.users-table select::-ms-expand {
+  display: block;
+}
+
+.btn-save {
+  background: #1976d2;
+  color: #fff;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.35rem;
+  border: none;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #cbd5e1;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.35rem;
+  border: 1px solid transparent;
+}
+
 .no-users {
   text-align: center;
   padding: 2rem;
@@ -929,6 +1049,29 @@ tbody tr:hover {
 
 :host-context(.dark) .no-results {
   color: #9ca3af;
+}
+
+/* Center Verified and Role columns (both header and cells) */
+.users-table table th:nth-child(3),
+.users-table table td:nth-child(3),
+.users-table table th:nth-child(4),
+.users-table table td:nth-child(4) {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Ensure checkbox, role badge and select are centered inside their cells */
+.users-table table td:nth-child(3) > label,
+.users-table table td:nth-child(3) > div,
+.users-table table td:nth-child(4) > .role-badge,
+.users-table table td:nth-child(4) > select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.users-table table td:nth-child(4) > select {
+  min-width: 6rem;
 }
 
 .no-results {

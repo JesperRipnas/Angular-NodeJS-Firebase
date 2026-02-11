@@ -10,7 +10,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../shared/services/users.service';
 import { AuthUser } from '../../auth/models/auth-user.model';
-import { EditUserModalComponent } from './edit-user-modal/edit-user-modal.component';
 import { Role } from '../../auth/models/role.enum';
 import { TranslationService } from '../../shared/services/translation.service';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
@@ -18,7 +17,7 @@ import { PaginatorComponent } from '../../shared/components/paginator/paginator.
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, EditUserModalComponent, PaginatorComponent],
+  imports: [CommonModule, PaginatorComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
@@ -63,6 +62,10 @@ export class UsersComponent implements OnInit {
     { value: Role.SELLER, labelKey: 'admin.users.roles.seller' },
     { value: Role.USER, labelKey: 'admin.users.roles.user' },
   ];
+
+  // Inline edit state
+  editingRow = signal<string | null>(null);
+  editedRow = signal<Partial<AuthUser>>({});
 
   readonly verificationOptions = [
     { value: 'verified' as const, labelKey: 'admin.users.search.verified' },
@@ -239,6 +242,8 @@ export class UsersComponent implements OnInit {
   }
 
   openEditModal(user: AuthUser): void {
+    // If a row is inline-editing, prevent opening the modal
+    if (this.editingRow()) return;
     this.selectedUserForEdit.set(user);
   }
 
@@ -335,9 +340,15 @@ export class UsersComponent implements OnInit {
 
   formatDate(value: string | null | undefined): string {
     if (!value) return '-';
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return '-';
-    return date.toLocaleDateString();
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return '-';
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    const ss = String(d.getSeconds()).padStart(2, '0');
+    return `${y}-${m}-${day} ${hh}:${mm}:${ss}`;
   }
 
   formatUsername(value: string | null | undefined): string {
@@ -489,6 +500,10 @@ export class UsersComponent implements OnInit {
 
     this.usersService.updateUser(originalUser.uuid, updatedUser).subscribe({
       next: () => {
+        // After saving, default sort to most recently updated so the saved user appears first
+        this.sortKey.set('updatedAt');
+        this.sortDirection.set('desc');
+        this.pageIndex.set(1);
         this.isSaving.set(false);
         this.closeEditModal();
         this.loadUsers();
@@ -533,8 +548,118 @@ export class UsersComponent implements OnInit {
     }
   }
 
+  startInlineEdit(user: AuthUser): void {
+    this.editingRow.set(user.uuid);
+    this.editedRow.set({
+      username: user.username ?? '',
+      firstName: user.firstName ?? '',
+      lastName: user.lastName ?? '',
+      email: user.email ?? '',
+      role: user.role,
+    });
+  }
+
+  cancelInlineEdit(): void {
+    this.editingRow.set(null);
+    this.editedRow.set({});
+    this.error.set(null);
+  }
+
+  setEditedValue(field: keyof AuthUser, value: unknown): void {
+    this.editedRow.update((r) => ({ ...(r ?? {}), [field]: value }));
+  }
+
+  saveInlineEdit(original: AuthUser): void {
+    const updated: AuthUser = {
+      ...original,
+      username: String(this.editedRow().username ?? original.username),
+      firstName: String(this.editedRow().firstName ?? original.firstName),
+      lastName: String(this.editedRow().lastName ?? original.lastName),
+      email: String(this.editedRow().email ?? original.email),
+      // verifiedEmail must not be changed via inline edit by admins; keep original
+      verifiedEmail: original.verifiedEmail,
+      role: (this.editedRow().role as Role) ?? original.role,
+    };
+
+    // Reuse validation logic from saveEditedUser where applicable
+    const usernamePattern = /^[a-zA-Z0-9]+$/;
+    const normalizedUsername = this.normalizeUsername(updated.username);
+    if (normalizedUsername && !usernamePattern.test(normalizedUsername)) {
+      this.error.set(
+        this.translation.translate('admin.users.messages.usernameInvalid')
+      );
+      return;
+    }
+    if (
+      normalizedUsername &&
+      this.isUsernameTaken(normalizedUsername, original.uuid)
+    ) {
+      this.error.set(
+        this.translation.translate('admin.users.messages.usernameTaken')
+      );
+      return;
+    }
+
+    if (updated.firstName && !this.isNameValid(updated.firstName)) {
+      this.error.set(
+        this.translation.translate('admin.users.messages.firstnameInvalid')
+      );
+      return;
+    }
+
+    if (updated.lastName && !this.isNameValid(updated.lastName)) {
+      this.error.set(
+        this.translation.translate('admin.users.messages.lastnameInvalid')
+      );
+      return;
+    }
+
+    // Email validation (same rules as edit-user-modal)
+    if (updated.email && !this.isEmailValid(updated.email)) {
+      this.error.set(
+        this.translation.translate('admin.users.messages.emailInvalid')
+      );
+      return;
+    }
+
+    this.isSaving.set(true);
+    this.error.set(null);
+
+    this.usersService.updateUser(original.uuid, updated).subscribe({
+      next: () => {
+        // After saving inline, sort by updatedAt desc so the updated row is easy to find
+        this.sortKey.set('updatedAt');
+        this.sortDirection.set('desc');
+        this.pageIndex.set(1);
+        this.isSaving.set(false);
+        this.editingRow.set(null);
+        this.editedRow.set({});
+        this.loadUsers();
+      },
+      error: (err) => {
+        console.error('Error updating user inline:', err);
+        this.error.set(
+          this.translation.translate('admin.users.messages.saveError')
+        );
+        this.isSaving.set(false);
+      },
+    });
+  }
+
   private normalizeUsername(value: string | null | undefined): string {
     return value?.trim().toLowerCase() ?? '';
+  }
+
+  private capitalizeFirstLetter(value: string | null | undefined): string {
+    const trimmed = value?.trimStart() ?? '';
+    if (!trimmed) return '';
+    return `${trimmed.charAt(0).toUpperCase()}${trimmed.slice(1)}`;
+  }
+
+  private isEmailValid(value: string | null | undefined): boolean {
+    const normalized = value?.trim() ?? '';
+    if (!normalized) return false;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized);
   }
 
   // Validate names with Unicode-aware regex when available; fallback to
@@ -560,6 +685,97 @@ export class UsersComponent implements OnInit {
         user.uuid !== currentUuid &&
         this.normalizeUsername(user.username) === normalizedUsername
     );
+  }
+
+  // Check whether a specific edited field is valid (uses same rules as modal)
+  isEditedFieldValid(field: keyof AuthUser, original: AuthUser): boolean {
+    const raw = this.editedRow()[field];
+    const value = raw === undefined || raw === null ? original[field] : raw;
+    if (field === 'username') {
+      const username = String(value ?? '');
+      const normalized = this.normalizeUsername(username);
+      const usernamePattern = /^[a-zA-Z0-9]+$/;
+      if (!normalized || !usernamePattern.test(normalized)) return false;
+      if (this.isUsernameTaken(normalized, original.uuid)) return false;
+      return true;
+    }
+
+    if (field === 'firstName' || field === 'lastName') {
+      return this.isNameValid(String(value ?? ''));
+    }
+
+    if (field === 'email') {
+      return this.isEmailValid(String(value ?? ''));
+    }
+
+    // verifiedEmail and role are always considered valid here
+    return true;
+  }
+
+  // Whether any of the editable fields differ from original (changes exist)
+  isRowChanged(original: AuthUser): boolean {
+    const edited = this.editedRow();
+    if (!edited) return false;
+    const usernameChanged =
+      this.normalizeUsername(String(edited.username ?? original.username)) !==
+      this.normalizeUsername(original.username);
+    const firstNameChanged =
+      String(edited.firstName ?? original.firstName ?? '') !==
+      String(original.firstName ?? '');
+    const lastNameChanged =
+      String(edited.lastName ?? original.lastName ?? '') !==
+      String(original.lastName ?? '');
+    const emailChanged =
+      String(edited.email ?? original.email ?? '') !==
+      String(original.email ?? '');
+    const editedRole = ((edited.role as Role) ?? original.role) as Role;
+    const roleChanged = editedRole !== original.role;
+    return (
+      usernameChanged ||
+      firstNameChanged ||
+      lastNameChanged ||
+      emailChanged ||
+      roleChanged
+    );
+  }
+
+  // Whether the entire edited row is valid
+  isRowValid(original: AuthUser): boolean {
+    const fields: Array<keyof AuthUser> = [
+      'username',
+      'firstName',
+      'lastName',
+      'email',
+    ];
+    return fields.every((f) => this.isEditedFieldValid(f, original));
+  }
+
+  // Helper used by template to decide if Save should be enabled
+  canSaveInline(original: AuthUser): boolean {
+    return (
+      this.isRowChanged(original) &&
+      this.isRowValid(original) &&
+      !this.isSaving()
+    );
+  }
+
+  // Handle keyboard events while editing a row: Enter=save, Escape=cancel
+  handleInlineKey(event: Event | KeyboardEvent, original: AuthUser): void {
+    const key = (event as KeyboardEvent).key;
+    console.debug('users: handleInlineKey', {
+      key,
+      uuid: original.uuid,
+      type: (event as Event).type,
+    });
+    if (key === 'Enter') {
+      event.preventDefault();
+      if (this.canSaveInline(original)) {
+        this.saveInlineEdit(original);
+      }
+    } else if (key === 'Escape' || key === 'Esc') {
+      event.preventDefault();
+      this.cancelInlineEdit();
+    }
   }
 
   private parseDate(value: string | null | undefined): Date | null {

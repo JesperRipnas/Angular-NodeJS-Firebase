@@ -6,6 +6,8 @@ export const sv: Translation = {
     defaultError: 'Ett fel uppstod. Försök igen.',
     login: 'Logga in',
     logout: 'Logga ut',
+    save: 'Spara',
+    cancel: 'Avbryt',
     myProfile: 'Min profil',
     signup: 'Registrera',
     yes: 'Ja',
