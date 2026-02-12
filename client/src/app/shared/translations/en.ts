@@ -146,6 +146,7 @@ export const en: Translation = {
         verifiedEmail: 'Verified',
         role: 'Role',
         actions: 'Actions',
+        uuid: 'UUID',
       },
       buttons: {
         edit: 'Edit',

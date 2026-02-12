@@ -135,6 +135,7 @@ export interface Translation {
       };
       noUsers: string;
       table: {
+        uuid: string;
         username: string;
         email: string;
         name: string;

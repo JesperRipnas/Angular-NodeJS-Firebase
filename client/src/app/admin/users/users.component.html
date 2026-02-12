@@ -314,7 +314,8 @@
           <colgroup>
             <col class="col-created" />
             <col class="col-updated" />
-            <col class="col-verified" />
+            <col class="col-uuid" />
+            <!-- <col class="col-verified" /> -->
             <col class="col-role" />
             <col class="col-username" />
             <col class="col-first-name" />
@@ -348,7 +349,12 @@
                   }}</span>
                 </button>
               </th>
-              <th
+              <th>
+                <span>{{
+                  translation.translate('admin.users.table.uuid')
+                }}</span>
+              </th>
+              <!-- <th
                 class="col-center"
                 [attr.aria-sort]="getAriaSort('verifiedEmail')"
               >
@@ -362,7 +368,7 @@
                     getSortIndicator('verifiedEmail')
                   }}</span>
                 </button>
-              </th>
+              </th> -->
               <th class="col-center" [attr.aria-sort]="getAriaSort('role')">
                 <button
                   type="button"
@@ -441,7 +447,10 @@
                         : translation.translate('shared.no')
                     }}
                   </td>
-                  <td>
+                  <td class="uuid-cell" title="{{ user.uuid }}">
+                    <span class="uuid-text">{{ user.uuid }}</span>
+                  </td>
+                  <!-- <td>
                     @if (user.verifiedEmail) {
                       <span
                         class="verified-icon verified-yes"
@@ -483,7 +492,7 @@
                         </svg>
                       </span>
                     }
-                  </td>
+                  </td> -->
                   <td>
                     @if (editingRow() === user.uuid) {
                       <select

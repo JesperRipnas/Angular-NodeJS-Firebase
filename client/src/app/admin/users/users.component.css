@@ -615,15 +615,28 @@ table {
 }
 
 .col-created {
-  width: 13rem;
-  min-width: 13rem;
-  max-width: 13rem;
+  width: 12rem;
+  min-width: 12rem;
+  max-width: 12rem;
 }
 
 .col-updated {
-  width: 13rem;
-  min-width: 13rem;
-  max-width: 13rem;
+  width: 12rem;
+  min-width: 12rem;
+  max-width: 12rem;
+}
+
+.col-uuid {
+  width: 22rem;
+  min-width: 22rem;
+  max-width: 22rem;
+}
+
+@media (max-width: 960px) {
+  .col-uuid {
+    min-width: 8rem;
+    max-width: 12rem;
+  }
 }
 
 .col-verified {
@@ -762,7 +775,7 @@ th {
 }
 
 td {
-  padding: 1rem;
+  padding: 0.5rem;
   border-bottom: 1px solid #e5e7eb;
   color: #374151;
 }

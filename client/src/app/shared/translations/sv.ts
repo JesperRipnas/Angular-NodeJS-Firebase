@@ -147,6 +147,7 @@ export const sv: Translation = {
         verifiedEmail: 'Verifierad',
         role: 'Roll',
         actions: 'Åtgärder',
+        uuid: 'UUID',
       },
       buttons: {
         edit: 'Redigera',
