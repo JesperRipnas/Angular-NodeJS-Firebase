@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class UsersService {
   private readonly http = inject(HttpClient);
-  private readonly API_URL = `${this.resolveApiUrl()}/users`;
+  private readonly API_URL = `${this.resolveApiUrl()}/api/users`;
 
   private resolveApiUrl(): string {
     const base = environment.apiUrl?.trim();

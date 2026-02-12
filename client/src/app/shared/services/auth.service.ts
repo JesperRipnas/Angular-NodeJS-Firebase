@@ -104,7 +104,7 @@ export class AuthService {
 
     return this.http
       .post<unknown>(
-        `${environment.apiUrl}/auth/login`,
+        `${environment.apiUrl}/api/auth/login`,
         {
           identifier: loginRequest.email,
           password: loginRequest.password,

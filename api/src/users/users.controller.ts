@@ -16,7 +16,7 @@ import { UsersService } from './users.service.js';
 import { AuthUser } from '../auth/interfaces/auth-user.interface.js';
 import { AdminGuard } from '../auth/guards/admin.guard.js';
 
-@Controller('users')
+@Controller('api/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

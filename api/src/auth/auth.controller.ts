@@ -14,7 +14,7 @@ import type { QueryResult } from 'pg';
 import { authDatabase } from './auth.js';
 import { LoginDto } from './dto/login.dto.js';
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
