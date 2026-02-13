@@ -124,6 +124,7 @@ export const en: Translation = {
         show: 'Show filters',
         hide: 'Hide filters',
         clear: 'Clear filters',
+        export: 'Export',
       },
       search: {
         label: 'Search users',

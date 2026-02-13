@@ -301,6 +301,10 @@ export class UsersComponent implements OnInit {
     this.persistFilters();
   }
 
+  exportUsers(): void {
+    console.log('export users data:');
+  }
+
   toggleVerification(value: 'verified' | 'unverified', checked: boolean): void {
     this.selectedVerification.update((current) => {
       if (checked) {

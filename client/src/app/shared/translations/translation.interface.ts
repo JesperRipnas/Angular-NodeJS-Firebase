@@ -121,6 +121,7 @@ export interface Translation {
         show: string;
         hide: string;
         clear: string;
+        export: string;
       };
       search: {
         label: string;

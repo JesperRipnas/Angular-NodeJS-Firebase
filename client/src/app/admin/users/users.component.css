@@ -12,14 +12,14 @@
 /* Scale down entire users component by 20% for a more compact layout */
 :host .users-container {
   /* Primary: non-standard but widely supported */
-  zoom: 0.9;
+  zoom: 0.85;
 
   /* Fallbacks for browsers that don't support zoom. Use centered transform origin so the panel appears centered. */
-  -webkit-transform: scale(0.9);
+  -webkit-transform: scale(0.85);
   -webkit-transform-origin: 50% 0;
-  -moz-transform: scale(0.9);
+  -moz-transform: scale(0.85);
   -moz-transform-origin: 50% 0;
-  transform: scale(0.9);
+  transform: scale(0.85);
   transform-origin: 50% 0;
 }
 
@@ -627,16 +627,9 @@ table {
 }
 
 .col-uuid {
-  width: 22rem;
-  min-width: 22rem;
-  max-width: 22rem;
-}
-
-@media (max-width: 960px) {
-  .col-uuid {
-    min-width: 8rem;
-    max-width: 12rem;
-  }
+  width: 24rem;
+  min-width: 24rem;
+  max-width: 24rem;
 }
 
 .col-verified {
@@ -801,24 +794,20 @@ tbody tr:hover {
 .users-table table tr.editing-row {
   background: #eef2ff;
   transition: background-color 0.15s ease;
-  box-shadow: inset 10px 0 0 0 rgba(59, 130, 246, 0.5);
 }
 
 :host-context(.dark) .users-table table tr.editing-row {
   background: rgba(59, 130, 246, 0.06);
-  box-shadow: inset 10px 0 0 0 rgba(59, 130, 246, 0.5);
 }
 
 /* Highlight the row pending deletion with a red inset accent */
 .users-table table tr.deleting-row {
   background: #fff5f5;
   transition: background-color 0.15s ease;
-  box-shadow: inset 10px 0 0 0 rgba(220, 38, 38, 0.5);
 }
 
 :host-context(.dark) .users-table table tr.deleting-row {
   background: rgba(220, 38, 38, 0.06);
-  box-shadow: inset 10px 0 0 0 rgba(220, 38, 38, 0.5);
 }
 
 .role-badge {
@@ -1029,7 +1018,6 @@ tbody tr:hover {
 .btn-delete:hover:not(:disabled) {
   background: #da190b;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
 }
 
 /* Inline edit inputs */
@@ -1203,4 +1191,10 @@ select.invalid {
 :host-context(.dark) .verified-no {
   color: #fca5a5;
   background: rgba(248, 113, 113, 0.06);
+}
+
+/* UUID column cells */
+.users-table table td.uuid-cell,
+.users-table table .uuid-text {
+  text-align: left !important;
 }

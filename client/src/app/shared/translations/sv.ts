@@ -125,6 +125,7 @@ export const sv: Translation = {
         show: 'Visa filter',
         hide: 'Dölj filter',
         clear: 'Rensa filter',
+        export: 'Exportera',
       },
       search: {
         label: 'Sök användare',
