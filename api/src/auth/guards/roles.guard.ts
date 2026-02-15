@@ -36,7 +36,7 @@ export class RolesGuard implements CanActivate {
 
     if (!requiredRoles.includes(user.role)) {
       throw new ForbiddenException(
-        `User with role "${user.role}" is not allowed to access this resource. Required roles: ${requiredRoles.join(', ')}`,
+        `User with role "${user.role}" is not allowed to access this resource`,
       );
     }
 
