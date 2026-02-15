@@ -41,9 +41,9 @@ const seedRoleByEmail = new Map(
 export const authDatabase = new Pool({
   host: process.env.DATABASE_HOST ?? 'localhost',
   port: Number(process.env.DATABASE_PORT ?? 5432),
-  user: process.env.DATABASE_USER ?? 'app_user',
-  password: process.env.DATABASE_PASSWORD ?? 'app_password',
-  database: process.env.DATABASE_NAME ?? 'app_db',
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -53,8 +53,7 @@ const authDatabaseProvider =
 export const authConfig: BetterAuthOptions = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   database: authDatabaseProvider,
-  secret:
-    process.env.BETTER_AUTH_SECRET ?? 'dev_better_auth_secret_32_chars_min',
+  secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL ?? 'http://localhost:3000',
   trustedOrigins: ['http://localhost:4200'],
   emailAndPassword: {
