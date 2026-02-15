@@ -1,4 +1,5 @@
 import { betterAuth, type BetterAuthOptions } from 'better-auth';
+import { createAuthMiddleware } from 'better-auth/api';
 import { Pool } from 'pg';
 import { Role } from './enums/role.enum.js';
 
@@ -59,6 +60,22 @@ export const authConfig: BetterAuthOptions = {
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 4,
+  },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60, // 5 minutes
+    },
+  },
+  logger: {
+    disabled: false,
+    disableColors: true,
+    level: 'debug',
+    log: (level, message) => {
+      const timestamp = new Date().toISOString();
+      const formattedMessage = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
+      console.log(formattedMessage);
+    },
   },
   user: {
     additionalFields: {
@@ -131,6 +148,17 @@ export const authConfig: BetterAuthOptions = {
         },
       },
     },
+  },
+  hooks: {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    after: createAuthMiddleware(async (ctx) => {
+      if (process.env.NODE_ENV === 'production') return; // production logs are handled by a separate logging solution
+      const timestamp = new Date().toISOString();
+      const method = ctx.method;
+      const route = ctx.path;
+      const userId = ctx.context.session?.user.id ?? 'Unauthenticated';
+      console.log(`[${timestamp}] ${method} ${route} ${userId}`);
+    }),
   },
   advanced: {
     useSecureCookies: process.env.NODE_ENV === 'production',
